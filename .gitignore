@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.pytest_cache/
+
+# Models / data
+*.pt
+*.ckpt
+*.safetensors
+*.bin
+*.npy
+*.npz
+*.zip
+
+# Media artifacts
+*.mp4
+*.wav
+*.edl
+
+# Logs / outputs
+*.log
+exp/
+ckpt/
+demo_res*/
+logs/
+outputs/
+tmpout/
+tmpout_torm/
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/

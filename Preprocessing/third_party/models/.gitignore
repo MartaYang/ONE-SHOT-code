@@ -1,0 +1,9 @@
+# SMPL/SMPLX body model symlinks → BOS (created at runtime by constants.ensure_smpl_symlinks)
+smpl
+smplx
+# cwd-compat shadow symlink (third_party/src -> .)
+!.gitignore
+
+# Force-include vendored small data files that top-level .gitignore (*.npz/*.npy) would drop.
+!smpl_mean_params.npz
+!smplx2smpl_joints.npy

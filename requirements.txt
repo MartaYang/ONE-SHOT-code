@@ -1,0 +1,52 @@
+# ONE-SHOT runtime requirements (inference + preprocessing).
+#
+# This file is the "rest" of the install — the install.sh script handles
+# packages that need special index/wheel sources up front (PyTorch +cu121,
+# pytorch3d prebuilt wheel, system ffmpeg via conda).  Run install.sh, do
+# NOT pip-install this file alone unless torch / torchvision / pytorch3d /
+# ffmpeg are already present.
+
+# --- Core inference ---
+diffusers==0.34.0
+transformers==4.49.0
+tokenizers>=0.21,<0.22
+safetensors>=0.4.3
+einops>=0.8
+accelerate>=1.1
+sentencepiece
+
+# --- Numeric / image ---
+# numpy<2.1 keeps compatibility with binary-wheel deps (decord, scipy <1.18, etc.)
+numpy<2.1
+scipy
+scikit-image
+
+Pillow
+opencv-python==4.10.0.84
+
+# --- Video I/O ---
+# scikit-video drives the FFmpegWriter used by utils/video_io.py; it shells out
+# to a system `ffmpeg` / `ffprobe`, which install.sh installs via conda-forge.
+imageio==2.34.2
+imageio-ffmpeg==0.5.1
+scikit-video==1.1.11
+decord==0.6.0
+
+# --- Preprocessing (3D / SMPL / rendering) ---
+smplx==0.1.28
+roma==1.5.6
+trimesh==4.12.2
+pyrender==0.1.45
+
+# --- Misc ---
+tqdm
+# omegaconf is referenced inside pickled checkpoints (e.g. human3r.pth) and is
+# needed by torch.load() during preprocessing model init.
+omegaconf==2.3.0
+# ftfy is used by oneshot_diffusers/pipeline_wan_oneshot.py for prompt cleaning.
+ftfy>=6.3
+
+# --- Preprocessing: Depth Anything 3 ---
+# Pulls in a fairly large transitive set (matplotlib, xformers, open3d, ...).
+# Required by Preprocessing/third_party/myutil_savergbd_da3.py.
+depth-anything-3==0.1.1

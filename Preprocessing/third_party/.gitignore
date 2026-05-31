@@ -1,0 +1,3 @@
+# SMPL/SMPLX body model symlinks → BOS (created at runtime by constants.ensure_smpl_symlinks)
+models/smpl
+models/smplx
