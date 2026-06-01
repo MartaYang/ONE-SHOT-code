@@ -1,161 +1,272 @@
+# ONE-SHOT: Compositional Human-Environment Video Synthesis via Spatial-Decoupled Motion Injection and Hybrid Context Integration
+
 <div align="center">
-
-# ONE-SHOT
-## Compositional Human-Environment Video Synthesis via<br>Spatial-Decoupled Motion Injection and Hybrid Context Integration
-
-Fengyuan Yang<sup>1,2</sup>&ensp;
-Luying Huang<sup>2,†</sup>&ensp;
-Jiazhi Guan<sup>2,✉</sup>&ensp;
-Quanwei Yang<sup>2</sup>&ensp;
-Dongwei Pan<sup>2</sup>&ensp;
-Jianglin Fu<sup>2</sup>&ensp;
-Haocheng Feng<sup>2</sup>&ensp;
-Wei He<sup>2</sup>&ensp;
-Kaisiyuan Wang<sup>2</sup>&ensp;
-Hang Zhou<sup>2,✉</sup>&ensp;
-Angela Yao<sup>1</sup>
-
-<sup>1</sup>National University of Singapore&emsp;<sup>2</sup>Baidu, AMU
-
-<sup>†</sup>Project leader&emsp;<sup>✉</sup>Corresponding authors&emsp;Work done during Fengyuan's internship at Baidu
-
-[![arXiv](https://img.shields.io/badge/arXiv-2604.01043-b31b1b.svg)](https://arxiv.org/abs/2604.01043)
-&nbsp;
-[![Project Page](https://img.shields.io/badge/Project-Page-blue.svg)](https://martayang.github.io/ONE-SHOT/)
-
+  <a href="https://arxiv.org/abs/2604.01043" target="_blank"><img src="https://img.shields.io/badge/Paper-b31b1b.svg?logo=arxiv&logoColor=white" height="22px"></a>
+  <a href="https://martayang.github.io/ONE-SHOT/" target="_blank"><img src="https://img.shields.io/badge/Webpage-4f46e5.svg?logo=googlechrome&logoColor=white" height="22px"></a>
+  <a href="https://huggingface.co/MartaYang007/ONE-SHOT-14B" target="_blank"><img src="https://img.shields.io/badge/Model-f59e0b.svg?logo=huggingface&logoColor=white" height="22px"></a>
+  <a href="https://github.com/MartaYang/ONE-SHOT-code" target="_blank"><img src="https://img.shields.io/badge/Code-111111.svg?logo=github&logoColor=white" height="22px"></a>
 </div>
 
----
+<div align="center">
+  Fengyuan Yang<sup>1,2</sup>&nbsp;&nbsp;
+  Luying Huang<sup>2,&dagger;</sup>&nbsp;&nbsp;
+  Jiazhi Guan<sup>2,&#9993;</sup>&nbsp;&nbsp;
+  Quanwei Yang<sup>2</sup>&nbsp;&nbsp;
+  Dongwei Pan<sup>2</sup>&nbsp;&nbsp;
+  Jianglin Fu<sup>2</sup>&nbsp;&nbsp;
+  Haocheng Feng<sup>2</sup>&nbsp;&nbsp;
+  Wei He<sup>2</sup>&nbsp;&nbsp;
+  Kaisiyuan Wang<sup>2</sup>&nbsp;&nbsp;
+  Hang Zhou<sup>2,&#9993;</sup>&nbsp;&nbsp;
+  Angela Yao<sup>1</sup>
+</div>
+
+<div align="center">
+  <sup>1</sup> National University of Singapore &nbsp;&nbsp;
+  <sup>2</sup> Baidu, AMU
+</div>
+
+<div align="center">
+  &dagger; Project leader &nbsp;&nbsp; &#9993; Corresponding authors &nbsp;&nbsp;
+  Work done during Fengyuan's internship at Baidu
+</div>
+
+Official inference code for **ONE-SHOT: Compositional Human-Environment Video Synthesis via Spatial-Decoupled Motion Injection and Hybrid Context Integration**.
+
+ONE-SHOT is a parameter-efficient framework for controllable human-environment video synthesis. It supports independent control over subject identity, human motion, scene context, and camera trajectory while preserving persistent identity and stable interactions in long generations.
+
+## 🧾 Abstract
 
 Recent advances in Video Foundation Models (VFMs) have revolutionized human-centric video synthesis, yet fine-grained and independent editing of subjects and scenes remains a critical challenge. We introduce **ONE-SHOT**, a parameter-efficient framework built upon pre-trained VFMs that achieves high-fidelity synthesis of human-environment videos with independent control over subject appearance, human dynamics, spatial environments, and camera trajectories. By optimizing only a sparse set of parameters, it achieves precise control while preserving responsiveness to textual instructions. A canonical-space motion injection mechanism mitigates conditioning competition between rigid human priors and text prompts. By anchoring static and dynamic context, ONE-SHOT ensures persistent subject identity and stable human-environment interactions across minute-scale generations. Extensive experiments demonstrate that ONE-SHOT significantly outperforms existing methods in structural control and creative diversity.
 
-<p align="center">
-  <img src="assets/fig_teaser.webp" width="90%">
-</p>
+## 🖼️ Overview
 
----
+![ONE-SHOT teaser overview](./assets/fig_teaser.webp)
 
-## 1. Installation
+## 📰 News
+
+- 🔥 The ONE-SHOT paper is available on [arXiv](https://arxiv.org/abs/2604.01043).
+- 🔥 ONE-SHOT project materials are available on the [project page](https://martayang.github.io/ONE-SHOT/).
+- 🔥 The `ONE-SHOT-14B` diffusers checkpoint can be downloaded from [Hugging Face](https://huggingface.co/MartaYang007/ONE-SHOT-14B).
+
+## 📊 Benchmark Highlight
+
+![ONE-SHOT main paper metrics](./assets/metrics_main.png)
+
+![ONE-SHOT supplementary metrics](./assets/metric_supp.png)
+
+## 🚀 Quick Start
+
+### 🛠️ Installation
+
+Recommended environment:
+
+- Linux
+- NVIDIA GPU
+- CUDA 12.1 compatible driver
+- Python 3.12
+- `ffmpeg` with `libx264` support
 
 ```bash
 git clone https://github.com/MartaYang/ONE-SHOT-code.git
 cd ONE-SHOT-code
+
+bash install.sh
+conda activate oneshot
 ```
 
+The installer creates the `oneshot` conda environment, installs a GPL-enabled `ffmpeg`, installs PyTorch `2.5.1+cu121`, installs the vendored PyTorch3D wheel, and then installs `requirements.txt`.
+
+<details>
+<summary>Manual installation commands</summary>
+
 ```bash
-# 1. Create conda environment
 conda create -n oneshot python=3.12 -y
 conda activate oneshot
 
-# 2. ffmpeg with libx264 (GPL build — required for video encoding)
 conda install 'ffmpeg=*=*gpl*' -y
 
-# 3. PyTorch 2.5.1 + CUDA 12.1
 pip install --index-url https://download.pytorch.org/whl/cu121 \
     torch==2.5.1+cu121 torchvision==0.20.1+cu121 torchaudio==2.5.1+cu121
 
-# 4. PyTorch3D (prebuilt wheel — no CUDA compilation needed)
 pip install Preprocessing/third_party/wheels/pytorch3d-0.7.9-cp312-cp312-manylinux_2_31_x86_64.whl
-
-# 5. Remaining dependencies
 pip install -r requirements.txt
 ```
 
-> **Shortcut:** `bash install.sh` runs all five steps above and prints a smoke test on completion.
+</details>
 
----
+### 📦 Checkpoints
 
-## 2. Checkpoints
-
-Download the pretrained weights from HuggingFace:
+Download the released checkpoint and set `ONESHOT_MODEL_DIR`:
 
 ```bash
 huggingface-cli download MartaYang007/ONE-SHOT-14B \
     --local-dir pretrained_models/ONESHOT-14B-diffusers
+
 export ONESHOT_MODEL_DIR=pretrained_models/ONESHOT-14B-diffusers
 ```
 
-<details>
-<summary>Checkpoint directory layout</summary>
+A recommended local checkpoint layout is:
 
+```text
+pretrained_models/
+└── ONESHOT-14B-diffusers/
+    ├── transformer/
+    ├── vae/
+    ├── text_encoder/
+    ├── tokenizer/
+    ├── scheduler/
+    ├── model_index.json
+    ├── preprocess/
+    │   ├── human3r.pth
+    │   ├── DA3NESTED-GIANT-LARGE-1.1/
+    │   ├── smpl_models/
+    │   └── torch_hub/
+    └── demo/
 ```
-ONESHOT-14B-diffusers/
-├── transformer/          # 14B video diffusion transformer
-├── vae/
-├── text_encoder/
-├── tokenizer/
-├── scheduler/
-├── model_index.json
-├── preprocess/           # preprocessing models
-│   ├── human3r.pth           # multi-person SMPL-X estimation (Human3R)
-│   ├── DA3NESTED-GIANT-LARGE-1.1/  # monocular depth (Depth-Anything-3)
-│   ├── smpl_models/          # SMPL / SMPL-X body models
-│   └── torch_hub/            # DINOv2 (offline cache)
-└── demo/                 # demo input videos 
+
+### ▶️ Inference
+
+The end-to-end entrypoint is:
+
+```bash
+bash scripts/run_pipeline.sh <id_swap|motion_swap|scene_swap> [task arguments]
 ```
+
+Supported tasks:
+
+| Task | Required inputs | Description |
+| --- | --- | --- |
+| `id_swap` | source video, identity profile video or identity profile images, prompt | Replace the actor identity while preserving the source motion and scene. |
+| `motion_swap` | source video, motion video, prompt | Apply a new motion to the original subject and scene. |
+| `scene_swap` | source video, scene video, prompt | Place the person into a different environment. |
+
+Example commands:
+
+<details open>
+<summary>ID swap</summary>
+
+```bash
+bash scripts/run_pipeline.sh id_swap \
+    --video_path "$ONESHOT_MODEL_DIR/demo/walkinforest.mp4" \
+    --id_profile_video "$ONESHOT_MODEL_DIR/demo/WillSmith.mp4" \
+    --prompt "A sunlit forest trail with dense green trees and soft natural light filtering through the leaves. Will Smith, wearing a black suit, walks steadily along the forest path while holding a wooden walking stick, looking slightly upward as he moves forward."
+
+# --id_profile_video: recommended — video with multi-angle coverage of the target person
+#   (front + side + other angles) for best identity fidelity.
+# Alternative: --id_profile_dir <dir> with 4 images named exactly:
+#   ref1.png (front view)  ref2.png (back / 3/4 view)  ref3.png (side view)  face.png (face crop)
+```
+
+`--id_profile_video` is recommended when the identity reference contains multi-angle coverage. Alternatively, provide `--id_profile_dir <dir>` with `ref1.png`, `ref2.png`, `ref3.png`, and `face.png`.
+
 </details>
 
----
+<details>
+<summary>Motion swap</summary>
 
-## 3. Quick Inference
+```bash
+bash scripts/run_pipeline.sh motion_swap \
+    --video_path "$ONESHOT_MODEL_DIR/demo/museum4_human.mp4" \
+    --motion_video_path "$ONESHOT_MODEL_DIR/demo/taiji.mp4" \
+    --prompt "An indoor space resembling the interior of a museum. A man in a suit is performing tai chi movements."
 
-Demo videos are included in the checkpoint download above, users are recommended to use their own videos as input.
-
-| Task | Command |
-|------|---------|
-| **ID Swap**<br><sub>Replace the actor's identity</sub> | `bash scripts/run_pipeline.sh id_swap \` <br> `    --video_path $ONESHOT_MODEL_DIR/demo/walkinforest.mp4 \` <br> `    --id_profile_video $ONESHOT_MODEL_DIR/demo/WillSmith.mp4 \` <br> `    --prompt "A sunlit forest trail with dense green trees and soft natural light filtering through the leaves. Will Smith, wearing a black suit, walks steadily along the forest path while holding a wooden walking stick, looking slightly upward as he move forward."` <br><br> `# --id_profile_video: recommended — video with multi-angle coverage of the target person` <br> `#   (front + side + other angles) for best identity fidelity.` <br> `# Alternative: --id_profile_dir <dir> with 4 images named exactly:` <br> `#   ref1.png (front view)  ref2.png (back / 3/4 view)  ref3.png (side view)  face.png (face crop)` |
-| **Motion Swap**<br><sub>Apply a new motion to the original video</sub> | `bash scripts/run_pipeline.sh motion_swap \` <br> `    --video_path $ONESHOT_MODEL_DIR/demo/museum4_human.mp4 \` <br> `    --motion_video_path $ONESHOT_MODEL_DIR/demo/taiji.mp4 \` <br> `    --prompt "An indoor space resembling the interior of a museum. A man in a suit is performing tai chi movements."` <br><br> `# to also swap identity: add --id_profile_video $ONESHOT_MODEL_DIR/demo/WillSmith.mp4` <br> `# Note: update the prompt accordingly (e.g., gender, name) to match the new identity and avoid conflicts with the video content.` |
-| **Scene Swap**<br><sub>Drop the person into a new background</sub> | `bash scripts/run_pipeline.sh scene_swap \` <br> `    --video_path $ONESHOT_MODEL_DIR/demo/palace_human.mp4 \` <br> `    --scene_video_path $ONESHOT_MODEL_DIR/demo/museum4_scene.mp4 \` <br> `    --id_profile_video $ONESHOT_MODEL_DIR/demo/WillSmith.mp4 \` <br> `    --prompt "An indoor space resembling the interior of a museum. Will Smith is walking, wearing a black suit."` <br><br> `# to also swap identity: add --id_profile_video $ONESHOT_MODEL_DIR/demo/WillSmith.mp4` <br> `# Note: update the prompt accordingly (e.g., gender, name) to match the new identity and avoid conflicts with the video content.` |
-
-Outputs are saved to `exp/<scheduler>_<task>_<timestamp>/<save_name>.mp4`, e.g.:<br>
-`exp/lcm_id_swap_20260527_221947/ID_WillSmith-SMPLX_clip_000-006-Scene_C01_gen_xxx_ourGen81.mp4`
-
----
-
-## TODO
-
-- [ ] **Multi-GPU inference** — support distributed single-sample inference with FSDP-based model sharding and sequence parallelism to reduce per-GPU memory usage for high-resolution generation
-- [ ] **ComfyUI support** — node-based workflow for easier experimentation and demo
-- [ ] **Fully compositional generation** — freely specify any combination of identity, motion, and scene sources, with explicit control over the person's position in the frame
-
----
-
-## Repository Layout
-
+# to also swap identity: add --id_profile_video $ONESHOT_MODEL_DIR/demo/WillSmith.mp4
+# Note: update the prompt accordingly (e.g., gender, name) to match the new identity and avoid conflicts with the video content.
 ```
-ONE-SHOT/
-├── install.sh                 # one-shot conda env installer
+
+To also swap identity, add `--id_profile_video "$ONESHOT_MODEL_DIR/demo/WillSmith.mp4"` and update the prompt so the identity description does not conflict with the video content.
+
+</details>
+
+<details>
+<summary>Scene swap</summary>
+
+```bash
+bash scripts/run_pipeline.sh scene_swap \
+    --video_path "$ONESHOT_MODEL_DIR/demo/palace_human.mp4" \
+    --scene_video_path "$ONESHOT_MODEL_DIR/demo/museum4_scene.mp4" \
+    --id_profile_video "$ONESHOT_MODEL_DIR/demo/WillSmith.mp4" \
+    --prompt "An indoor space resembling the interior of a museum. Will Smith is walking, wearing a black suit."
+
+# to also swap identity: add --id_profile_video $ONESHOT_MODEL_DIR/demo/WillSmith.mp4
+# Note: update the prompt accordingly (e.g., gender, name) to match the new identity and avoid conflicts with the video content.
+```
+
+To preserve the original identity, omit `--id_profile_video` and update the prompt accordingly.
+
+</details>
+
+Generated videos are saved to:
+
+```text
+exp/<scheduler>_<task>_<timestamp>/<save_name>.mp4
+```
+
+For example:
+
+```text
+exp/lcm_id_swap_20260527_221947/ID_WillSmith-SMPLX_clip_000-006-Scene_C01_gen_xxx_ourGen81.mp4
+```
+
+## 🤗 Available Models
+
+| Model | Status | Link |
+| --- | --- | --- |
+| ONE-SHOT-14B | Available | [MartaYang007/ONE-SHOT-14B](https://huggingface.co/MartaYang007/ONE-SHOT-14B) |
+
+## 📝 Notes
+
+- `scripts/run_pipeline.sh` builds a task CSV, selects available GPUs with the most free memory, and launches `scripts/inference_short.sh`.
+- Set `ONESHOT_ENV` if your conda environment name is not `oneshot`.
+- The demo videos are included in the checkpoint download, but using your own videos is recommended for real experiments.
+- The prompt should match any swapped identity, motion, or scene to avoid conflicts between text and visual conditions.
+
+## 🗺️ TODO
+
+- [ ] Multi-GPU inference with FSDP-based model sharding and sequence parallelism.
+- [ ] ComfyUI support for node-based experimentation and demos.
+- [ ] Fully compositional generation with explicit identity, motion, scene, and position controls.
+
+## 📁 Repository Layout
+
+```text
+ONE-SHOT-code/
+├── install.sh                 # one-shot conda environment installer
 ├── requirements.txt
 ├── tools/
-│   ├── inference_short.py     # short-video inference entry point
-│   └── inference_long.py      # long-video inference (scene memory)
+│   ├── inference_short.py     # short-video inference entrypoint
+│   └── inference_long.py      # long-video inference with scene memory
 ├── scripts/
-│   ├── run_pipeline.sh        # end-to-end: preprocessing + inference
+│   ├── run_pipeline.sh        # preprocessing + inference pipeline
 │   ├── inference_short.sh
 │   └── inference_long.sh
 ├── Preprocessing/
 │   ├── preprocess_video.py    # per-video preprocessing
-│   ├── build_csv.py           # build inference CSV from task arguments
+│   ├── build_csv.py           # task CSV builder
 │   ├── make_scene_masked_dilate.py
-│   └── third_party/           # vendored dust3r / Human3R / CroCo + utilities
-├── oneshot_diffusers/         # ONE-SHOT override package on top of diffusers
+│   └── third_party/           # vendored DUSt3R, Human3R, CroCo, and utilities
+├── oneshot_diffusers/         # ONE-SHOT diffusers overrides
 │   ├── transformer_wan_oneshot.py
 │   ├── pipeline_wan_oneshot.py
 │   └── oneshot_util.py
-├── utils/                     # ODE solvers, video I/O helpers
-└── datasets/                  # DWPose drawing, data utilities
+├── utils/                     # ODE solvers and video I/O helpers
+└── datasets/                  # DWPose drawing and data utilities
 ```
 
----
-
-## Acknowledgments
+## 🙏 Acknowledgement
 
 This project builds on:
-[Wan2.1](https://github.com/Wan-Video/Wan2.1) · [Human3R](https://github.com/fanegg/Human3R) · [DUSt3R](https://github.com/naver/dust3r) · [Depth-Anything-3](https://github.com/DepthAnything/Depth-Anything-V2) · [SMPL-X](https://smpl-x.is.tue.mpg.de/) · [PyTorch3D](https://github.com/facebookresearch/pytorch3d) · [Diffusers](https://github.com/huggingface/diffusers)
 
----
+- [Wan2.1](https://github.com/Wan-Video/Wan2.1)
+- [Human3R](https://github.com/fanegg/Human3R)
+- [DUSt3R](https://github.com/naver/dust3r)
+- [Depth-Anything-3](https://github.com/DepthAnything/Depth-Anything-V2)
+- [SMPL-X](https://smpl-x.is.tue.mpg.de/)
+- [PyTorch3D](https://github.com/facebookresearch/pytorch3d)
+- [Diffusers](https://github.com/huggingface/diffusers)
 
-## Citation
+## 📚 Citation
 
 ```bibtex
 @misc{yang2026oneshot,
