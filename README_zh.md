@@ -1,4 +1,4 @@
-# ONE-SHOT：通过空间解耦运动注入与混合上下文集成实现组合式人-环境视频合成
+# ONE-SHOT：Compositional Human-Environment Video Synthesis via Spatial-Decoupled Motion Injection and Hybrid Context Integration
 
 <div align="center">
   <a href="./README.md">English</a> | <a href="./README_zh.md">简体中文</a>
