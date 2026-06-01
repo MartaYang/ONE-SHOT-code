@@ -1,6 +1,10 @@
 # ONE-SHOT: Compositional Human-Environment Video Synthesis via Spatial-Decoupled Motion Injection and Hybrid Context Integration
 
 <div align="center">
+  <a href="./README.md">English</a> | <a href="./README_zh.md">简体中文</a>
+</div>
+
+<div align="center">
   <a href="https://arxiv.org/abs/2604.01043" target="_blank"><img src="https://img.shields.io/badge/Paper-b31b1b.svg?logo=arxiv&logoColor=white" height="22px"></a>
   <a href="https://martayang.github.io/ONE-SHOT/" target="_blank"><img src="https://img.shields.io/badge/Webpage-4f46e5.svg?logo=googlechrome&logoColor=white" height="22px"></a>
   <a href="https://huggingface.co/MartaYang007/ONE-SHOT-14B" target="_blank"><img src="https://img.shields.io/badge/Model-f59e0b.svg?logo=huggingface&logoColor=white" height="22px"></a>
@@ -45,9 +49,9 @@ Recent advances in Video Foundation Models (VFMs) have revolutionized human-cent
 
 ## 📰 News
 
-- 🔥 The ONE-SHOT paper is available on [arXiv](https://arxiv.org/abs/2604.01043).
-- 🔥 ONE-SHOT project materials are available on the [project page](https://martayang.github.io/ONE-SHOT/).
-- 🔥 The `ONE-SHOT-14B` diffusers checkpoint can be downloaded from [Hugging Face](https://huggingface.co/MartaYang007/ONE-SHOT-14B).
+- 🔥 **`2026/05/31`**: The `ONE-SHOT-14B` diffusers checkpoint can be downloaded from [Hugging Face](https://huggingface.co/MartaYang007/ONE-SHOT-14B).
+- 🔥 **`2026/04/01`**: The ONE-SHOT paper is available on [arXiv](https://arxiv.org/abs/2604.01043).
+- 🔥 **`2026/04/01`**: ONE-SHOT project materials are available on the [project page](https://martayang.github.io/ONE-SHOT/).
 
 ## 📊 Metrics
 
