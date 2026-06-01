@@ -49,7 +49,7 @@ Recent advances in Video Foundation Models (VFMs) have revolutionized human-cent
 - 🔥 ONE-SHOT project materials are available on the [project page](https://martayang.github.io/ONE-SHOT/).
 - 🔥 The `ONE-SHOT-14B` diffusers checkpoint can be downloaded from [Hugging Face](https://huggingface.co/MartaYang007/ONE-SHOT-14B).
 
-## 📊 Benchmark Highlight
+## 📊 Metrics
 
 ![ONE-SHOT main paper metrics](./assets/metrics_main.png)
 
