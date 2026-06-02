@@ -104,7 +104,7 @@ pip install -r requirements.txt
 下载已发布的 checkpoint，并设置 `ONESHOT_MODEL_DIR`：
 
 ```bash
-huggingface-cli download MartaYang007/ONE-SHOT-14B \
+hf download MartaYang007/ONE-SHOT-14B \
     --local-dir pretrained_models/ONESHOT-14B-diffusers
 
 export ONESHOT_MODEL_DIR=pretrained_models/ONESHOT-14B-diffusers
@@ -125,9 +125,26 @@ pretrained_models/
     │   ├── human3r.pth
     │   ├── DA3NESTED-GIANT-LARGE-1.1/
     │   ├── smpl_models/
+    │   │   └── smplx/
+    │   │       └── SMPLX_NEUTRAL.npz     # 需自行下载，见下文
     │   └── torch_hub/
     └── demo/
 ```
+
+#### SMPL-X body model（需手动下载）
+
+SMPL-X 的官方许可禁止第三方再分发，因此 `SMPLX_NEUTRAL.npz` 不会随 Hugging Face
+checkpoint 一起发布。
+
+1. 在 <https://smpl-x.is.tue.mpg.de/> 注册并同意模型许可。
+2. 在 **Downloads** 页面下载最新的 `SMPL-X (NPZ format)` 版本。
+3. 把文件放到下面这个**确切路径**：
+
+   ```text
+   $ONESHOT_MODEL_DIR/preprocess/smpl_models/smplx/SMPLX_NEUTRAL.npz
+   ```
+
+运行时若文件缺失，pipeline 会立即报错，并指向本节。
 
 ### ▶️ 推理
 
@@ -193,6 +210,8 @@ bash scripts/run_pipeline.sh scene_swap \
     --id_profile_video "$ONESHOT_MODEL_DIR/demo/WillSmith.mp4" \
     --prompt "An indoor space resembling the interior of a museum. Will Smith is walking, wearing a black suit."
 
+# --scene_video_path：需要是纯背景视频（不包含人物主体）。
+#   强烈建议选择与 --video_path 中人物景深匹配的背景视频，以保证生成效果。
 # 如果还需要替换身份，可加入 --id_profile_video $ONESHOT_MODEL_DIR/demo/WillSmith.mp4
 # 注意：请同步更新 prompt（例如性别、姓名等），避免与视频内容冲突。
 ```

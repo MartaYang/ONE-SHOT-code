@@ -74,10 +74,38 @@ TORCH_HUB_DIR = os.environ.get(
 )
 
 
+# Inference 实际加载的 SMPL/SMPLX 文件最小集合：
+#   - smplx/SMPLX_NEUTRAL.npz : smplx.create(..., gender='neutral') 加载（preprocess_video.py
+#     的 SMPL_Layer，以及 dust3r.smpl_model.SMPLModel 中的 smplx_neutral_{10,11}）。
+# 其它文件（SMPL_*.pkl、SMPLX_{MALE,FEMALE}.{pkl,npz}、smplx2smpl.pkl、J_regressor_h36m.npy、
+# smplx_npz.zip）只被评估代码路径（dataset in {bedlam, rich, 3dpw, emdb}）使用，inference
+# 不会触达，因此**不要求**用户下载。
+_REQUIRED_SMPL_FILES = (
+    os.path.join("smplx", "SMPLX_NEUTRAL.npz"),
+)
+
+_SMPL_DOWNLOAD_HINT = (
+    "  Fix:\n"
+    "    1) Register at https://smpl-x.is.tue.mpg.de/ and download the "
+    "latest 'SMPL-X (NPZ format)' release.\n"
+    "    2) Extract and place SMPLX_NEUTRAL.npz at:\n"
+    "         <SMPL_MODELS_DIR>/smplx/SMPLX_NEUTRAL.npz\n"
+    "       i.e. <PREPROCESS_ROOT>/smpl_models/smplx/SMPLX_NEUTRAL.npz\n"
+    "    3) See README.md section 'SMPL-X body model (manual download)' for "
+    "full instructions.\n"
+    "  These files are not redistributed because the SMPL-X license prohibits "
+    "third-party redistribution."
+)
+
+
 def ensure_smpl_symlinks() -> None:
     """确保 third_party/models/{smpl,smplx} symlink 指向 SMPL_MODELS_DIR。
 
     幂等且对并发安全：多个 preprocess 进程同时调用时，TOCTOU race 不会抛错。
+
+    Fail-fast：symlink 之后会校验 ``_REQUIRED_SMPL_FILES`` 是否真的可达；缺失时
+    立即抛 ``FileNotFoundError`` 并附上 SMPL-X 官网下载步骤，避免后续 ``smplx.create``
+    深处才报一行 cryptic 的 ``Path does not exist!``。
     """
     target_dir = os.path.join(THIRD_PARTY_DIR, "models")
     os.makedirs(target_dir, exist_ok=True)
@@ -102,6 +130,25 @@ def ensure_smpl_symlinks() -> None:
             if os.path.islink(link) and os.readlink(link) == src:
                 continue
             raise
+
+    # symlink 之后做一次 fail-fast 检查：必备文件是否真的可达。
+    missing = [
+        rel for rel in _REQUIRED_SMPL_FILES
+        if not os.path.isfile(os.path.join(target_dir, rel))
+    ]
+    if missing:
+        missing_paths = "\n".join(
+            f"    - {os.path.join(SMPL_MODELS_DIR, rel)}" for rel in missing
+        )
+        raise FileNotFoundError(
+            "[ensure_smpl_symlinks] Required SMPL-X body model file(s) not "
+            "found:\n"
+            f"{missing_paths}\n"
+            f"  SMPL_MODELS_DIR   = {SMPL_MODELS_DIR}\n"
+            f"  PREPROCESS_ROOT   = {PREPROCESS_ROOT}\n"
+            f"  ONESHOT_MODEL_DIR = {ONESHOT_MODEL_DIR}\n"
+            f"{_SMPL_DOWNLOAD_HINT}"
+        )
 
 
 def setup_torch_hub() -> None:

@@ -6,4 +6,3 @@ smplx
 
 # Force-include vendored small data files that top-level .gitignore (*.npz/*.npy) would drop.
 !smpl_mean_params.npz
-!smplx2smpl_joints.npy

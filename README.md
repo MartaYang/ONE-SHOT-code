@@ -104,7 +104,7 @@ pip install -r requirements.txt
 Download the released checkpoint and set `ONESHOT_MODEL_DIR`:
 
 ```bash
-huggingface-cli download MartaYang007/ONE-SHOT-14B \
+hf download MartaYang007/ONE-SHOT-14B \
     --local-dir pretrained_models/ONESHOT-14B-diffusers
 
 export ONESHOT_MODEL_DIR=pretrained_models/ONESHOT-14B-diffusers
@@ -125,9 +125,27 @@ pretrained_models/
     │   ├── human3r.pth
     │   ├── DA3NESTED-GIANT-LARGE-1.1/
     │   ├── smpl_models/
+    │   │   └── smplx/
+    │   │       └── SMPLX_NEUTRAL.npz     # YOU MUST DOWNLOAD THIS — see below
     │   └── torch_hub/
     └── demo/
 ```
+
+#### SMPL-X body model (manual download)
+
+The SMPL-X license prohibits third-party redistribution, so `SMPLX_NEUTRAL.npz`
+is not included in the Hugging Face checkpoint.
+
+1. Register at <https://smpl-x.is.tue.mpg.de/> and accept the model license.
+2. From the **Downloads** page, fetch the latest `SMPL-X (NPZ format)` release.
+3. Place the file at:
+
+   ```text
+   $ONESHOT_MODEL_DIR/preprocess/smpl_models/smplx/SMPLX_NEUTRAL.npz
+   ```
+
+If the file is missing at runtime, the pipeline fails fast with an error
+pointing back to this section.
 
 ### ▶️ Inference
 
@@ -193,6 +211,9 @@ bash scripts/run_pipeline.sh scene_swap \
     --id_profile_video "$ONESHOT_MODEL_DIR/demo/WillSmith.mp4" \
     --prompt "An indoor space resembling the interior of a museum. Will Smith is walking, wearing a black suit."
 
+# --scene_video_path: must be a pure background video (no human subjects).
+#   Strongly recommended to choose a background video whose depth-of-field
+#   matches the person in --video_path for best generation quality.
 # to also swap identity: add --id_profile_video $ONESHOT_MODEL_DIR/demo/WillSmith.mp4
 # Note: update the prompt accordingly (e.g., gender, name) to match the new identity and avoid conflicts with the video content.
 ```
